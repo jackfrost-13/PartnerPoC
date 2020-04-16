@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/card.css"],"names":[],"mappings":"AAAA;AACA;AACA;AACA;AACA,C","file":"demo.7214bdb7600b3dc291e7.css","sourcesContent":[".card {\r\n    padding: 10px 20px;\r\n    border: 1px solid magenta;\r\n    border-radius: 5px;\r\n}"],"sourceRoot":""}
