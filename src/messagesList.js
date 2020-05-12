@@ -13,7 +13,7 @@ export default class MessagesApp{
     }
 
     addEventListener(){
-
+        var self = this;
         document.getElementById("bname").onkeyup = function(event) {
             var technicalInput = document.getElementById("tname");
             var businessInput = document.getElementById("bname");
@@ -35,25 +35,40 @@ export default class MessagesApp{
         }
 
         document.getElementById("bname").onchange = function(event) {
-            //Sending for name validation to DWC
+            //Sending for name validation to DWC along with status done.
             var inputVal = document.getElementById("tname");
+            var body = {
+                name: inputVal.value,
+                businessName: inputVal.value,
+                status: "done"
+            };
             //inputVal.style.backgroundColor = "pink";
-            window.top.postMessage( inputVal.value,  'http://localhost:15002');
+            window.top.postMessage( body,  'http://localhost:15002');
         }
 
         function onMessageReceived(event) {
             //Checking initial connection and saving DWC URL
             if (event.origin === 'http://localhost:15002' && event.data.isValid === undefined) {
-                this.dwcURL = event.origin;
+                self.dwcURL = event.origin;
             }
             //If valid name
-            else if(event.origin === 'http://localhost:15002' && event.data.isValid === true){
-                var inputVal = document.getElementById("tname");
-                inputVal.style.backgroundColor = "white";
-            }
-            else if(event.origin === 'http://localhost:15002' && event.data.isValid === false){
-                var inputVal = document.getElementById("tname");
-                inputVal.style.backgroundColor = "pink";
+            if(event.origin === 'http://localhost:15002'){
+                switch(event.data.isValid){
+                    case true:{
+                        var inputVal = document.getElementById("tname");
+                        inputVal.style.backgroundColor = "white";
+                        break;
+                    }
+                    case false:{
+                        var inputVal = document.getElementById("tname");
+                        inputVal.style.backgroundColor = "pink";
+                        break;
+                    }
+                }
+                if(event.data.schemaCredentials){
+                    var schemaDetails = event.data.schemaCredentials;
+                    console.log("Open SQL Schema Details Received", event.data.schemaCredentials);
+                }
             }
         }
 
